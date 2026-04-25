@@ -7,23 +7,15 @@ A weekend-paced plan to ship v1 in roughly 8 weekends of focused work (3-4 month
 
 ---
 
-## Before weekend 1 — Prep (~30 minutes)
-
-- [ ] Pick a project name (placeholder is fine — git doesn't care, you can rename later)
-- [ ] Decide: TypeScript or JavaScript (recommendation: TypeScript)
-- [ ] No more pre-planning. Don't pre-design the database. Don't sketch the UI. Just show up Saturday.
-
----
-
 ## Weekend 1 — "Hello, snippet"
 
 **Goal:** by Sunday evening, you can run the app locally, type something into a textarea, hit save, and see it appear in a list below. Persisted in a real database. No styling, no auth, no topics.
 
 ### Saturday — Backend (3-4 hours)
 
-- [ ] Create the GitHub repo (private OK to start)
-- [ ] Clone locally, add a Node `.gitignore`
-- [ ] Set up Postgres locally via `docker-compose.yml` (Postgres only)
+- [X] Create the GitHub repo (private OK to start)
+- [X] Clone locally, add a Node `.gitignore`
+- [X] Set up Postgres locally via `docker-compose.yml` (Postgres only)
 - [ ] Initialise NestJS (recommended) or Fastify project in `backend/`
 - [ ] Create `snippets` table: `id`, `content`, `created_at`
 - [ ] Endpoint: `POST /snippets` — accepts `{ content: string }`, saves to DB
