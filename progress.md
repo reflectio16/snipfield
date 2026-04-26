@@ -16,7 +16,7 @@ A weekend-paced plan to ship v1 in roughly 8 weekends of focused work (3-4 month
 - [X] Create the GitHub repo (private OK to start)
 - [X] Clone locally, add a Node `.gitignore`
 - [X] Set up Postgres locally via `docker-compose.yml` (Postgres only)
-- [ ] Initialise NestJS (recommended) or Fastify project in `backend/`
+- [X] Initialise NestJS (recommended) or Fastify project in `backend/`
 - [ ] Create `snippets` table: `id`, `content`, `created_at`
 - [ ] Endpoint: `POST /snippets` — accepts `{ content: string }`, saves to DB
 - [ ] Endpoint: `GET /snippets` — returns all snippets
