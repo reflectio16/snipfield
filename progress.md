@@ -1,192 +1,190 @@
-# v1 Build Plan — Note Clipping Tool
+# snipfield — Progress
 
-A weekend-paced plan to ship v1 in roughly 8 weekends of focused work (3-4 months calendar time). Check items off as you go.
+A personal bookmark space for everything worth keeping: notes, screenshots, and links (films, books, videos…) organised into categories you create yourself.
 
-**Cadence:** weekends only, ~6 hours of focused work per weekend.
-**Rule for every weekend:** before you start Saturday, write down the *one* thing you want to finish. One. Hit it Sunday and stop, or roll over to next weekend if needed. Never start new work on top of broken work.
+**Why:** screenshots pile up in the phone album, and tabs stay open "for later." snipfield replaces both.
 
----
+**Cadence:** weekends, ~6 hours of focused work. Work happens at home or at school; the code moves through GitHub.
 
-## Weekend 1 — "Hello, snippet"
-
-**Goal:** by Sunday evening, you can run the app locally, type something into a textarea, hit save, and see it appear in a list below. Persisted in a real database. No styling, no auth, no topics.
-
-### Saturday — Backend (3-4 hours)
-
-- [X] Create the GitHub repo (private OK to start)
-- [X] Clone locally, add a Node `.gitignore`
-- [X] Set up Postgres locally via `docker-compose.yml` (Postgres only)
-- [X] Initialise NestJS (recommended) or Fastify project in `backend/`
-- [ ] Create `snippets` table: `id`, `content`, `created_at`
-- [ ] Endpoint: `POST /snippets` — accepts `{ content: string }`, saves to DB
-- [ ] Endpoint: `GET /snippets` — returns all snippets
-- [ ] Test both endpoints with `curl` or Postman
-- [ ] Commit. Push.
-
-### Sunday — Frontend (3-4 hours)
-
-- [ ] Initialise Vite + React + TypeScript project in `frontend/`
-- [ ] One page: textarea + "save" button + list of saved snippets below
-- [ ] Use plain `fetch` (no TanStack Query yet)
-- [ ] Get CORS working between frontend and backend
-- [ ] Verify end-to-end: type, save, see it in the list, refresh, still there
-- [ ] Commit. Push.
-
-**Reality check:** if you finish Saturday's work by 1pm, *stop*. Don't push into Sunday's work.
+**Rules for every session**
+- Before starting: `git pull`, then `docker compose up -d` from the project root.
+- Write down the *one* thing you want to finish this session.
+- Never start new work on top of broken work.
+- Before stopping: commit, then `git push`. Always — school machines can wipe local files.
 
 ---
 
-## Weekend 2 — "Topics"
+## v1 scope
 
-**Goal:** Snippets belong to topics. Create topics, view a topic's page, add snippets to it.
+**Category** — created by the user (Films, Books, Notes…), unlimited.
 
-### Saturday — Backend
+**Item** — belongs to one category, has a type:
+- **Note** — text, pasted or written, rendered as Markdown
+- **Image** — an uploaded screenshot or picture
+- **Link** — a URL shown with a preview (title + thumbnail)
 
-- [ ] Set up Prisma (or TypeORM) for migrations
-- [ ] New table: `topics` (`id`, `name`, `created_at`)
-- [ ] Add `topic_id` foreign key to `snippets`
-- [ ] Endpoint: `POST /topics`
-- [ ] Endpoint: `GET /topics`
-- [ ] Endpoint: `GET /topics/:id` (returns topic + its snippets)
-- [ ] Endpoint: `POST /topics/:id/snippets`
-
-### Sunday — Frontend
-
-- [ ] Install React Router
-- [ ] Homepage: list of topics + "create topic" form
-- [ ] Topic page (`/topics/:id`): list of snippets + textarea to add new ones
-- [ ] Still no styling — just functional
-
-**End of weekend 2:** working two-page app with real data hierarchy.
+**Deliberately not in v1:** playing videos inside the app, special handling for each platform, editing or cropping images, sharing between users.
 
 ---
 
-## Weekend 3 — "Markdown rendering"
+## Done so far
 
-**Goal:** Snippets render as Markdown. Pasting from a webpage or AI chat preserves formatting.
-
-### Saturday — Markdown rendering
-
-- [ ] Install `react-markdown`
-- [ ] Install a syntax highlighter (`rehype-highlight` or similar)
-- [ ] Replace plain text display with rendered Markdown
-- [ ] Test by pasting a code-heavy block from a Claude/ChatGPT conversation
-
-### Sunday — Paste-to-Markdown
-
-- [ ] Install `turndown`
-- [ ] Intercept paste events on the textarea
-- [ ] If clipboard has HTML → convert to Markdown via Turndown before inserting
-- [ ] If plain text → insert as-is
-- [ ] Test with: Wikipedia article, blog post, AI conversation
-
-**End of weekend 3:** the app starts feeling genuinely useful. Use it yourself the following week. Note what's annoying.
+- [x] Dev environment at home (Node 20 via nvm, Docker, Git, VS Code)
+- [x] NestJS backend scaffolded in `backend/`
+- [x] Postgres running in Docker via `docker-compose.yml`
+- [x] Prisma 6 connected, first migration applied (`Snippet` table — will be replaced in step 1)
+- [x] First commit pushed
 
 ---
 
-## Weekend 4 — "Sources and tags"
+## Setup at school (one time)
 
-**Goal:** Each snippet has a source and tags. Filter by tag.
-
-### Saturday — Backend
-
-- [ ] Add `source` field to snippets (string — URL or free text)
-- [ ] New table: `tags` (`id`, `name`)
-- [ ] New table: `snippet_tags` (many-to-many join)
-- [ ] Endpoints to add/remove tags on snippets
-- [ ] Endpoint to list all tags
-- [ ] Endpoint to filter snippets by tag
-
-### Sunday — Frontend
-
-- [ ] Source input next to the snippet textarea
-- [ ] Tag input with autocomplete from existing tags
-- [ ] Tag filter on the topic page
+- [ ] Create an SSH key (`ssh-keygen -t ed25519`) and add it to GitHub
+- [ ] Install nvm and Node 20 (`nvm install 20`, `nvm alias default 20`)
+- [ ] Clone the repo (into `goinfre` if the home quota is tight)
+- [ ] `cd backend && npm install`
+- [ ] Create `backend/.env` by hand with `DATABASE_URL`
+- [ ] `docker compose up -d`
+- [ ] `npx prisma migrate dev` to create the tables
 
 ---
 
-## Weekend 5 — "Make it look like something"
+## Step 1 — Backend: categories and notes
 
-**Goal:** Stop being ugly.
+**Goal:** create categories and add text notes to them, tested with curl.
 
-- [ ] Install Tailwind
-- [ ] Look at Bear, Obsidian, GitHub Issues for layout inspiration — *don't invent a UI*
-- [ ] Pick: clean readable typography, generous spacing, one accent colour
-- [ ] Style the homepage
-- [ ] Style the topic page
-- [ ] Style the snippet rendering (especially code blocks — they should look pleasant)
-- [ ] Take screenshots — these are for your README later
+### Schema
+- [ ] Replace the `Snippet` model with `Category` (`id`, `name`, `createdAt`)
+- [ ] Add `Item` model: `id`, `type` (enum: NOTE, IMAGE, LINK), `categoryId`, `title` (optional), `content` (optional), `url` (optional), `imagePath` (optional), `createdAt`
+- [ ] Run a migration (`npx prisma migrate dev --name categories_and_items`)
+- [ ] Read the generated SQL and understand it
 
-**End of weekend 5:** the project now presents well in screenshots.
-
----
-
-## Weekend 6 — "Search"
-
-**Goal:** Search across all snippets.
-
-- [ ] Set up Postgres full-text search (`tsvector` column on snippets)
-- [ ] Add GIN index on the tsvector
-- [ ] Set up trigger or migration logic to keep tsvector in sync with content
-- [ ] Backend endpoint: `GET /search?q=...` using `ts_rank` for relevance
-- [ ] Search bar on the homepage
-- [ ] Results: snippet preview + topic + tags + highlighted matched terms
-- [ ] Write a paragraph in your README explaining *why* you chose Postgres FTS over Elasticsearch (this is interview gold)
+### Code
+- [ ] `PrismaService` + `PrismaModule` so NestJS can use the database
+- [ ] `CategoriesModule`: `POST /categories`, `GET /categories`, `GET /categories/:id` (with its items)
+- [ ] `ItemsModule`: `POST /categories/:id/items` for notes
+- [ ] Input validation (`class-validator`): no empty category names, no empty notes
+- [ ] Test every endpoint with curl
+- [ ] Commit and push
 
 ---
 
-## Weekend 7 — "Auth"
+## Step 2 — Frontend: the basics
 
-**Goal:** Login required. Each user sees only their own data.
+**Goal:** use the app in the browser.
 
-- [ ] Email + password registration endpoint (hash with bcrypt or argon2)
-- [ ] Login endpoint returning JWT (access token) + refresh token
-- [ ] Refresh token in httpOnly cookie, access token in memory on the frontend
-- [ ] Refresh endpoint
-- [ ] Logout endpoint
-- [ ] Protect all snippet/topic/tag endpoints with auth middleware
-- [ ] All data scoped to the logged-in user (add `user_id` to topics, cascade through)
-- [ ] Login + register pages on the frontend
-- [ ] Auth context / route guards on the frontend
+- [ ] Vite + React + TypeScript in `frontend/`
+- [ ] React Router
+- [ ] Home page: list of categories + "new category" form
+- [ ] Category page: list of items + form to add a note
+- [ ] CORS configured on the backend
+- [ ] Notes rendered as Markdown (`react-markdown`)
+- [ ] Paste from a web page converts to Markdown (`turndown`)
+- [ ] Test on your phone over Wi-Fi (`npm run dev -- --host`)
+- [ ] Commit and push
 
 ---
 
-## Weekend 8 — "Ship it"
+## Step 3 — Image items
 
-**Goal:** Real URL, HTTPS, real users (well, you).
+**Goal:** upload a screenshot into a category.
 
-- [ ] Buy a domain (Namecheap, OVH, Porkbun — ~€10/year)
-- [ ] Rent a VPS (Hetzner CX11 ~€4/month)
-- [ ] Production `docker-compose.yml` with Postgres, backend, frontend
-- [ ] Nginx reverse proxy in the stack
-- [ ] Let's Encrypt for HTTPS (Certbot or a containerised solution)
-- [ ] Set up DNS A record → VPS IP
-- [ ] Deploy. Test. Verify HTTPS works.
-- [ ] Update README with: live URL, screenshots, what it does, tech stack, why you built it
-- [ ] **Flip the repo to public if it isn't already**
-- [ ] Add the live URL to the GitHub repo description
+- [ ] Backend upload endpoint (NestJS + Multer)
+- [ ] Files stored on disk in a Docker volume, path saved in `imagePath`
+- [ ] Limits: allowed types (png, jpg, webp) and max file size
+- [ ] Endpoint to serve the images
+- [ ] Frontend: upload button, image shown in the category feed
+- [ ] Delete an item (and its file)
+- [ ] Commit and push
 
-**End of weekend 8:** real deployed app, real URL. Add it to your CV.
+---
+
+## Step 4 — Link items
+
+**Goal:** save a URL and see a preview.
+
+- [ ] Backend fetches the page and reads its preview tags (`og:title`, `og:image`)
+- [ ] Store title and thumbnail URL on the item
+- [ ] Timeouts and errors handled — a link without a preview is still saved
+- [ ] Frontend: link card with thumbnail + title, opens the original page
+- [ ] Test with YouTube, a book page, a film page
+- [ ] Note: X (Twitter) usually blocks previews — use Image items for X content
+- [ ] Commit and push
+
+---
+
+## Step 5 — Make it look good (mobile-first)
+
+- [ ] Tailwind
+- [ ] Design for the phone screen first, then widen for the laptop
+- [ ] Mixed feed that looks good with notes, images and links together
+- [ ] Look at apps you like for inspiration — don't invent a UI
+- [ ] Screenshots for the README
+- [ ] Commit and push
+
+---
+
+## Step 6 — Search and filtering
+
+- [ ] Postgres full-text search on titles and note content
+- [ ] Filter by item type (notes / images / links)
+- [ ] Search bar on the home page
+- [ ] README paragraph: why Postgres search and not Elasticsearch
+- [ ] Commit and push
+
+---
+
+## Step 7 — Auth
+
+- [ ] Register + login (password hashed with bcrypt or argon2)
+- [ ] JWT access token + refresh token in an httpOnly cookie
+- [ ] Every category and item belongs to a user
+- [ ] Users can only see their own data and images
+- [ ] Login and register pages
+- [ ] Commit and push
+
+---
+
+## Step 8 — Deploy
+
+- [ ] Domain name
+- [ ] Small VPS (e.g. Hetzner)
+- [ ] Production `docker-compose.yml`: Postgres, backend, frontend, image volume
+- [ ] Nginx reverse proxy + HTTPS with Let's Encrypt
+- [ ] Backups of the database and the image volume
+- [ ] README: live URL, screenshots, stack, why you built it
+- [ ] Repo public
+- [ ] Commit and push
+
+---
+
+## Step 9 — On the phone (PWA)
+
+**Goal:** install snipfield on Android and share into it directly.
+
+- [ ] Web app manifest + icons
+- [ ] Installable on the Android home screen
+- [ ] Share target: share text, links and **images** from other apps into snipfield
+- [ ] Choose the category when something is shared
+- [ ] Test the real flow: screenshot on X → Share → snipfield → Films
+- [ ] Commit and push
 
 ---
 
 ## After v1
 
-- Use the app yourself for 2-3 months before deciding what v2 is.
-- Real usage tells you what's missing better than any planning.
+Use it for a few weeks before choosing what's next. Pick **one**:
 
-### v2 candidates (pick *one*, not all)
-
-- [ ] Spaced repetition: app resurfaces old notes on a schedule
-- [ ] AI source: paste a Claude/ChatGPT conversation, extract key points as draft snippets
-- [ ] Export to Markdown / PDF
-- [ ] Browser extension for one-click capture from any webpage
-- [ ] Mobile-friendly responsive overhaul
+- [ ] Tags across categories
+- [ ] "Done" status (watched / read) for films and books
+- [ ] Browser extension for one-click saving
+- [ ] React Native client using the same backend
+- [ ] Image storage moved to object storage
 
 ---
 
 ## Honest expectations
 
-- **Calendar time:** 3-4 months from start to deployed v1. Weekends will be missed. Some weekends will be half-done. That's normal.
-- **First weekend will feel painful** — fighting tooling, not writing features. This is universal. Push through.
-- **The project will never feel "good enough."** That's not a signal to delay. That's the signal to ship anyway.
+- This is bigger than the first plan: expect several months of weekends.
+- Some weekends will be missed or half-done. That's normal.
+- It will never feel "good enough" to show. Ship it anyway.
