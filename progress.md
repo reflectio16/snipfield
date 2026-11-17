@@ -39,13 +39,13 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 
 ## Setup at school (one time)
 
-- [ ] Create an SSH key (`ssh-keygen -t ed25519`) and add it to GitHub
-- [ ] Install nvm and Node 20 (`nvm install 20`, `nvm alias default 20`)
-- [ ] Clone the repo (into `goinfre` if the home quota is tight)
-- [ ] `cd backend && npm install`
-- [ ] Create `backend/.env` by hand with `DATABASE_URL`
-- [ ] `docker compose up -d`
-- [ ] `npx prisma migrate dev` to create the tables
+- [x ] Create an SSH key (`ssh-keygen -t ed25519`) and add it to GitHub
+- [ x] Install nvm and Node 20 (`nvm install 20`, `nvm alias default 20`)
+- [ x] Clone the repo (into `goinfre` if the home quota is tight)
+- [x ] `cd backend && npm install`
+- [ x] Create `backend/.env` by hand with `DATABASE_URL`
+- [x ] `docker compose up -d`
+- [x ] `npx prisma migrate dev` to create the tables
 
 ---
 
@@ -54,18 +54,18 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 **Goal:** create categories and add text notes to them, tested with curl.
 
 ### Schema
-- [ ] Replace the `Snippet` model with `Category` (`id`, `name`, `createdAt`)
-- [ ] Add `Item` model: `id`, `type` (enum: NOTE, IMAGE, LINK), `categoryId`, `title` (optional), `content` (optional), `url` (optional), `imagePath` (optional), `createdAt`
-- [ ] Run a migration (`npx prisma migrate dev --name categories_and_items`)
-- [ ] Read the generated SQL and understand it
+- [ x] Replace the `Snippet` model with `Category` (`id`, `name`, `createdAt`)
+- [ x] Add `Item` model: `id`, `type` (enum: NOTE, IMAGE, LINK), `categoryId`, `title` (optional), `content` (optional), `url` (optional), `imagePath` (optional), `createdAt`
+- [ x] Run a migration (`npx prisma migrate dev --name categories_and_items`)
+- [ x] Read the generated SQL and understand it
 
 ### Code
-- [ ] `PrismaService` + `PrismaModule` so NestJS can use the database
-- [ ] `CategoriesModule`: `POST /categories`, `GET /categories`, `GET /categories/:id` (with its items)
-- [ ] `ItemsModule`: `POST /categories/:id/items` for notes
-- [ ] Input validation (`class-validator`): no empty category names, no empty notes
-- [ ] Test every endpoint with curl
-- [ ] Commit and push
+- [x ] `PrismaService` + `PrismaModule` so NestJS can use the database
+- [ x] `CategoriesModule`: `POST /categories`, `GET /categories`, `GET /categories/:id` (with its items)
+- [ x] `ItemsModule`: `POST /categories/:categoryId/notes` for notes
+- [ x] Input validation (`class-validator`): no empty category names, no empty notes
+- [ x] Test every endpoint with curl
+- [ x] Commit and push
 
 ---
 
@@ -110,6 +110,10 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 - [ ] Test with YouTube, a book page, a film page
 - [ ] Note: X (Twitter) usually blocks previews — use Image items for X content
 - [ ] Commit and push
+
+---
+
+### NOTE: images and links will get their own endpoints (/images, /links)
 
 ---
 
