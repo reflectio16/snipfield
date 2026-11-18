@@ -1,15 +1,14 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import type { Category } from '../types';
-import { Link } from 'react-router';
-
+import { useEffect, useState, type FormEvent } from "react";
+import type { Category } from "../types";
+import { Link } from "react-router";
 
 function HomePage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
   useEffect(() => {
-    fetch('/api/categories')
+    fetch("/api/categories")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
@@ -24,23 +23,23 @@ function HomePage() {
     event.preventDefault();
     setError(null);
 
-    const res = await fetch('/api/categories', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/categories", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
     });
 
     if (!res.ok) {
       const body = await res.json();
       setError(
-        Array.isArray(body.message) ? body.message.join(', ') : body.message,
+        Array.isArray(body.message) ? body.message.join(", ") : body.message,
       );
       return;
     }
 
     const created: Category = await res.json();
     setCategories((prev) => [...prev, created]);
-    setName('');
+    setName("");
   }
 
   return (
@@ -60,9 +59,9 @@ function HomePage() {
 
       <ul>
         {categories.map((category) => (
-            <li key={category.id}>
-                <Link to={`/categories/${category.id}`}>{category.name}</Link>
-            </li>
+          <li key={category.id}>
+            <Link to={`/categories/${category.id}`}>{category.name}</Link>
+          </li>
         ))}
       </ul>
     </main>
