@@ -73,11 +73,11 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 
 **Goal:** use the app in the browser.
 
-- [ ] Vite + React + TypeScript in `frontend/`
-- [ ] React Router
-- [ ] Home page: list of categories + "new category" form
-- [ ] Category page: list of items + form to add a note
-- [ ] CORS configured on the backend
+- [ x] Vite + React + TypeScript in `frontend/`
+- [ x] React Router
+- [ x] Home page: list of categories + "new category" form
+- [x ] Category page: list of items + form to add a note
+- [x ] CORS configured on the backend
 - [ ] Notes rendered as Markdown (`react-markdown`)
 - [ ] Paste from a web page converts to Markdown (`turndown`)
 - [ ] Test on your phone over Wi-Fi (`npm run dev -- --host`)
