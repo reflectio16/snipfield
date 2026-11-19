@@ -16,6 +16,8 @@ fi
 
 echo "==> Installing backend dependencies"
 (cd backend && npm ci)
+echo "==> Installing frontend dependencies"
+(cd frontend && npm ci)
 
 echo "==> Starting Postgres"
 docker compose up -d
