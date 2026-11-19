@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import type { CategoryWithItems } from "../types";
 import NoteForm from "../components/NoteForm";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 function CategoryPage() {
   const { id } = useParams();
@@ -59,7 +61,7 @@ function CategoryPage() {
           {category.items.map((item) => (
             <li key={item.id}>
               {item.title && <strong>{item.title}</strong>}
-              <p>{item.content}</p>
+              <Markdown remarkPlugins={[remarkGfm]}>{item.content ?? ''}</Markdown>
             </li>
           ))}
         </ul>
