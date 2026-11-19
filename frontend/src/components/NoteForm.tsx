@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from "react";
+import { useState, type ClipboardEvent, type FormEvent } from 'react';
 import type { Item } from "../types";
+import { htmlToMarkdown } from '../lib/htmlToMarkdown';
 
 type NoteFormProps = {
   categoryId: number;
@@ -36,6 +37,21 @@ function NoteForm({ categoryId, onCreated }: NoteFormProps) {
     
   }
 
+  function handlePaste(event: ClipboardEvent<HTMLTextAreaElement>) {
+    const html = event.clipboardData.getData('text/html');
+    if (!html) {
+      return;
+    }
+
+    event.preventDefault();
+    const markdown = htmlToMarkdown(html);
+
+    const textarea = event.currentTarget;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    setContent(content.slice(0, start) + markdown + content.slice(end));
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -47,6 +63,7 @@ function NoteForm({ categoryId, onCreated }: NoteFormProps) {
       <textarea
         value={content}
         onChange={(event) => setContent(event.target.value)}
+        onPaste={handlePaste}
         placeholder="Paste or write your note"
       />
       <button type="submit">Add note</button>
