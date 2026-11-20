@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
-import type { CategoryWithItems } from "../types";
-import NoteForm from "../components/NoteForm";
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router';
+import type { CategoryWithItems, Item } from '../types';
+import NoteForm from '../components/NoteForm';
+import ImageForm from '../components/ImageForm';
+import ItemCard from '../components/ItemCard';
 
 function CategoryPage() {
   const { id } = useParams();
@@ -28,6 +28,12 @@ function CategoryPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  function addItem(item: Item) {
+    setCategory((prev) =>
+      prev ? { ...prev, items: [item, ...prev.items] } : prev,
+    );
+  }
+
   if (loading) {
     return <p>Loading…</p>;
   }
@@ -45,14 +51,9 @@ function CategoryPage() {
     <main>
       <Link to="/">← All categories</Link>
       <h1>{category.name}</h1>
-      <NoteForm
-        categoryId={category.id}
-        onCreated={(item) =>
-          setCategory((prev) =>
-            prev ? { ...prev, items: [item, ...prev.items] } : prev,
-          )
-        }
-      />
+
+      <NoteForm categoryId={category.id} onCreated={addItem} />
+      <ImageForm categoryId={category.id} onCreated={addItem} />
 
       {category.items.length === 0 ? (
         <p>No items yet.</p>
@@ -60,8 +61,7 @@ function CategoryPage() {
         <ul>
           {category.items.map((item) => (
             <li key={item.id}>
-              {item.title && <strong>{item.title}</strong>}
-              <Markdown remarkPlugins={[remarkGfm]}>{item.content ?? ''}</Markdown>
+              <ItemCard item={item} />
             </li>
           ))}
         </ul>
