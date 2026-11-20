@@ -1,3 +1,4 @@
+import type { Response } from 'express';
 import {
   BadRequestException,
   Body,
@@ -7,6 +8,8 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  Get,
+  Res
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { randomUUID } from 'crypto';
@@ -20,11 +23,11 @@ const IMAGE_EXTENSIONS: Record<string, string> = {
   'image/webp': '.webp',
 };
 
-@Controller('categories/:categoryId')
+@Controller()
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  @Post('notes')
+  @Post('categories/:categoryId/notes')
   createNote(
     @Param('categoryId', ParseIntPipe) categoryId: number,
     @Body() dto: CreateNoteDto,
@@ -32,7 +35,7 @@ export class ItemsController {
     return this.itemsService.createNote(categoryId, dto);
   }
 
-  @Post('images')
+  @Post('categories/:categoryId/images')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -62,5 +65,24 @@ export class ItemsController {
       throw new BadRequestException('No file uploaded');
     }
     return this.itemsService.createImage(categoryId, file.filename);
+  }
+
+  @Get('items/:id/image')
+  async getImage(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
+    const filename = await this.itemsService.getImageFilename(id);
+
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.sendFile(filename, { root: 'uploads' }, (err) => {
+      if (err && !res.headersSent) {
+        res.status(404).json({
+          message: 'Image file not found',
+          error: 'Not Found',
+          statusCode: 404,
+        });
+      }
+    });
   }
 }

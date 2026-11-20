@@ -39,6 +39,14 @@ export class ItemsService {
     });
   }
 
+  async getImageFilename(id: number) {
+    const item = await this.prisma.item.findUnique({ where: { id } });
+    if (!item || item.type !== ItemType.IMAGE || !item.imagePath) {
+      throw new NotFoundException(`Image ${id} not found`);
+    }
+    return item.imagePath;
+  }
+
   private async ensureCategoryExists(categoryId: number) {
     const category = await this.prisma.category.findUnique({
       where: { id: categoryId },
