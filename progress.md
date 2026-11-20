@@ -187,6 +187,17 @@ Use it for a few weeks before choosing what's next. Pick **one**:
 
 ---
 
+## Design Notes 
+
+- [ ] The text seems too close to the right side on the phone
+- [ ] Title and note creation boxes needs more room initially
+- [ ] the buttons needs to be a bit bigger
+- [ ] Will look at the colors and layout designs later
+- [ ] 
+
+
+---
+
 ## Honest expectations
 
 - This is bigger than the first plan: expect several months of weekends.
