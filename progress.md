@@ -78,10 +78,10 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 - [ x] Home page: list of categories + "new category" form
 - [x ] Category page: list of items + form to add a note
 - [x ] CORS configured on the backend
-- [ ] Notes rendered as Markdown (`react-markdown`)
-- [ ] Paste from a web page converts to Markdown (`turndown`)
-- [ ] Test on your phone over Wi-Fi (`npm run dev -- --host`)
-- [ ] Commit and push
+- [x ] Notes rendered as Markdown (`react-markdown`)
+- [ x] Paste from a web page converts to Markdown (`turndown`)
+- [x ] Test on your phone over Wi-Fi (`npm run dev -- --host`)
+- [ x] Commit and push
 
 ---
 
@@ -89,11 +89,11 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 
 **Goal:** upload a screenshot into a category.
 
-- [ ] Backend upload endpoint (NestJS + Multer)
-- [ ] Files stored on disk in a Docker volume, path saved in `imagePath`
-- [ ] Limits: allowed types (png, jpg, webp) and max file size
-- [ ] Endpoint to serve the images
-- [ ] Frontend: upload button, image shown in the category feed
+- [ x] Backend upload endpoint (NestJS + Multer)
+- [ x] Files stored on disk in a Docker volume, path saved in `imagePath`
+- [ x] Limits: allowed types (png, jpg, webp) and max file size
+- [ x] Endpoint to serve the images
+- [x ] Frontend: upload button, image shown in the category feed
 - [ ] Delete an item (and its file)
 - [ ] Commit and push
 
