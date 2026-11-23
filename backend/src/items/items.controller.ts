@@ -3,12 +3,14 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Post,
   UploadedFile,
   UseInterceptors,
   Get,
+  HttpCode,
   Res
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -84,5 +86,10 @@ export class ItemsController {
         });
       }
     });
+  }
+  @Delete('items/:id')
+  @HttpCode(204)
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.itemsService.remove(id);
   }
 }
