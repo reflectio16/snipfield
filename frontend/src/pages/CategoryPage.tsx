@@ -47,6 +47,13 @@ function CategoryPage() {
     );
   }
 
+  function removeItem(id: number) {
+    setCategory((prev) =>
+      prev 
+        ? { ...prev, items: prev.items.filter((item) => item.id !== id) } 
+        : prev);
+  }
+
   return (
     <main>
       <Link to="/">← All categories</Link>
@@ -61,7 +68,7 @@ function CategoryPage() {
         <ul>
           {category.items.map((item) => (
             <li key={item.id}>
-              <ItemCard item={item} />
+              <ItemCard item={item} onDeleted={removeItem} />
             </li>
           ))}
         </ul>
