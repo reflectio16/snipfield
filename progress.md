@@ -94,8 +94,8 @@ A personal bookmark space for everything worth keeping: notes, screenshots, and 
 - [ x] Limits: allowed types (png, jpg, webp) and max file size
 - [ x] Endpoint to serve the images
 - [x ] Frontend: upload button, image shown in the category feed
-- [ ] Delete an item (and its file)
-- [ ] Commit and push
+- [ x] Delete an item (and its file)
+- [ x] Commit and push
 
 ---
 
