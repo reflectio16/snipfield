@@ -5,12 +5,16 @@ import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateLinkDto } from './dto/create-link.dto';
+import { LinkPreviewService } from './link-preview.service';
 
 @Injectable()
 export class ItemsService {
 
   private readonly logger = new Logger(ItemsService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly linkPreview: LinkPreviewService,
+  ) {}
 
   async createNote(categoryId: number, dto: CreateNoteDto) {
     await this.ensureCategoryExists(categoryId);
@@ -67,12 +71,16 @@ export class ItemsService {
 
   async createLink(categoryId: number, dto: CreateLinkDto) {
 
-      await this.ensureCategoryExists(categoryId);
+    await this.ensureCategoryExists(categoryId);
+
+    const preview = await this.linkPreview.fetchPreview(dto.url);
 
     return this.prisma.item.create({
       data: {
         type: ItemType.LINK,
         url: dto.url,
+        title: preview.title,
+        previewImageUrl: preview.imageUrl,
         categoryId,
       },
     });
