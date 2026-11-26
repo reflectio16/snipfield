@@ -29,6 +29,7 @@ model Item {
   content    String?
   url        String?
   imagePath  String?
+  previewImageUrl String?
   createdAt  DateTime @default(now())
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)

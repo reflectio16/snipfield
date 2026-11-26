@@ -4,6 +4,7 @@ import { unlink } from 'fs/promises';
 import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateNoteDto } from './dto/create-note.dto';
+import { CreateLinkDto } from './dto/create-link.dto';
 
 @Injectable()
 export class ItemsService {
@@ -62,6 +63,19 @@ export class ItemsService {
         this.logger.warn(`Could not delete file ${item.imagePath}: ${err}`),
       );
     }
+  }
+
+  async createLink(categoryId: number, dto: CreateLinkDto) {
+
+      await this.ensureCategoryExists(categoryId);
+
+    return this.prisma.item.create({
+      data: {
+        type: ItemType.LINK,
+        url: dto.url,
+        categoryId,
+      },
+    });
   }
 
   private async ensureCategoryExists(categoryId: number) {

@@ -18,6 +18,7 @@ import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
 import { ItemsService } from './items.service';
 import { CreateNoteDto } from './dto/create-note.dto';
+import { CreateLinkDto } from './dto/create-link.dto';
 
 const IMAGE_EXTENSIONS: Record<string, string> = {
   'image/png': '.png',
@@ -69,6 +70,14 @@ export class ItemsController {
     return this.itemsService.createImage(categoryId, file.filename);
   }
 
+  @Post('categories/:categoryId/links')
+  createLink(
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Body() dto: CreateLinkDto,
+  ) {
+    return this.itemsService.createLink(categoryId, dto);
+  }
+
   @Get('items/:id/image')
   async getImage(
     @Param('id', ParseIntPipe) id: number,
@@ -92,4 +101,5 @@ export class ItemsController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.itemsService.remove(id);
   }
+
 }
